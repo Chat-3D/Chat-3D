@@ -32,11 +32,12 @@ class PTBaseDataset(Dataset):
         scene_feat_dir = os.path.join(self.data_root, scene_id)
         scene_feat = []
         for _i, file_path in enumerate(glob.glob(os.path.join(scene_feat_dir, "*.pt"))):
-            # scene_feats.append(torch.load(file_path))
             oid = int(file_path.split("/")[-1][:-3])
             assert (_i == oid)
-            scene_feat.append(torch.load(file_path).squeeze().detach().cpu())
-            # scene_mask[oid] = 1
+            if not os.path.exists(file_path):
+                print(file_path)
+                raise FileNotFoundError
+            scene_feat.append(torch.load(file_path))
         scene_feat = torch.stack(scene_feat, dim=0)
         return scene_id, obj_id, scene_feat, scene_attr
 

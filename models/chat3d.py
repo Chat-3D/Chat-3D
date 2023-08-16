@@ -92,7 +92,7 @@ class Chat3D(nn.Module):
         self.pos_embedding = PositionEmbeddingCoordsSine(
             d_pos=self.llama_model.config.hidden_size, pos_type="fourier"
         )
-        self.input_norm = nn.LayerNorm(self.input_dim)
+        # self.input_norm = nn.LayerNorm(self.input_dim)
         self.llama_norm = nn.LayerNorm(self.llama_model.config.hidden_size)
         self.encoder_num_layers = config.get("encoder_num_layers", 1)
         self.relation_module = TransformerEncoder(dim=self.llama_model.config.hidden_size, num_layers=self.encoder_num_layers)
@@ -138,8 +138,8 @@ class Chat3D(nn.Module):
     def encode_and_project(self, feat, attr):
         pos_emb = self.pos_embedding(attr[:, :, :3], self.input_dim).permute(0, 2, 1)
         color_size_emb = self.color_size_proj(attr[:, :, 3:])
-        feat = self.input_norm(feat + color_size_emb + pos_emb)
-        feat = self.scene_proj(feat)
+        feat = feat + color_size_emb + pos_emb
+        feat = self.llama_norm(self.scene_proj(feat))
         return feat
 
     def forward_stage1(self, scene_feat, scene_attr, target_id, target_captions, is_eval=False, **kwargs):

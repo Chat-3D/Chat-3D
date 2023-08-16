@@ -1,7 +1,7 @@
 # ========================= data ==========================
 anno_root = "anno"  # annotation dir
 pc_encoder = "ulip2"  #
-feat_root = f"/root/autodl-tmp/scene-LLaMA/datasets/referit3d/{pc_encoder}"  # data dir for extracted features from pretrained 3d encoder
+feat_root = f"/root/autodl-tmp/scene-LLaMA/datasets/referit3d/pcd_feats_{pc_encoder}"  # data dir for extracted features from pretrained 3d encoder
 train_instance_file = f"{anno_root}/scannet_train_instances.json"
 val_instance_file = f"{anno_root}/scannet_val_instances.json"
 train_file_s1 = [
