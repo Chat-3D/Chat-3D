@@ -72,6 +72,19 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
                    --evaluate
   ```
 
+# Citation
+
+If you find this project useful in your research, please consider cite:
+```BibTeX
+@misc{wang2023chat3d,
+      title={Chat-3D: Data-efficiently Tuning Large Language Model for Universal Dialogue of 3D Scenes}, 
+      author={Zehan Wang and Haifeng Huang and Yang Zhao and Ziang Zhang and Zhou Zhao},
+      year={2023},
+      eprint={2308.08769},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
+```
 
 # Acknowledgement
 
