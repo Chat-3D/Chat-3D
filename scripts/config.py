@@ -9,7 +9,7 @@ train_file_s1 = [
         feat_root,
         train_instance_file,
         f"{anno_root}/scanrefer_train_captions_noun.json",
-    ]
+    ],
 ]
 train_file_s2 = [
     [

@@ -1,6 +1,6 @@
 # Chat-3D 
 
-This is a repo for paper "Chat-3D: Data-efficiently Tuning Large Language Model for Universal Dialogue of 3D Scenes". [ [paper](https://arxiv.org/abs/) / [project page](https://chat-3d.github.io/) ]
+This is a repo for paper "Chat-3D: Data-efficiently Tuning Large Language Model for Universal Dialogue of 3D Scenes". [[paper](https://arxiv.org/abs/2308.08769) ] [[project page](https://chat-3d.github.io/)]
 
 # Schedule
 
@@ -72,15 +72,9 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
                    --evaluate
   ```
 
-# Citation
-
-If you find this project useful in your research, please consider cite:
-```BibTeX
-
-```
 
 # Acknowledgement
 
 Thanks to the open source of the following projects:
 
-[VideoChat](https://github.com/OpenGVLab/Ask-Anything/tree/main/video_chat), [LLaMA](https://github.com/facebookresearch/llama), [ULIP](https://github.com/salesforce/ULIP), [ScanRefer](https://github.com/daveredrum/ScanRefer), [ReferIt3D](https://github.com/referit3d/referit3d), [vil3dref](https://github.com/cshizhe/vil3dref), [ScanNet](https://github.com/ScanNet/ScanNet), 
+[VideoChat](https://github.com/OpenGVLab/Ask-Anything/tree/main/video_chat), [LLaMA](https://github.com/facebookresearch/llama), [ULIP](https://github.com/salesforce/ULIP), [ScanRefer](https://github.com/daveredrum/ScanRefer), [ReferIt3D](https://github.com/referit3d/referit3d), [vil3dref](https://github.com/cshizhe/vil3dref), [ScanNet](https://github.com/ScanNet/ScanNet) 

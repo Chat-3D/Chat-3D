@@ -14,6 +14,8 @@ from models.position_embedding import PositionEmbeddingCoordsSine
 
 from transformers import StoppingCriteria, StoppingCriteriaList
 
+import contextlib
+
 logger = logging.getLogger(__name__)
 
 
@@ -92,7 +94,7 @@ class Chat3D(nn.Module):
         self.pos_embedding = PositionEmbeddingCoordsSine(
             d_pos=self.llama_model.config.hidden_size, pos_type="fourier"
         )
-        # self.input_norm = nn.LayerNorm(self.input_dim)
+        self.input_norm = nn.LayerNorm(self.input_dim)
         self.llama_norm = nn.LayerNorm(self.llama_model.config.hidden_size)
         self.encoder_num_layers = config.get("encoder_num_layers", 1)
         self.relation_module = TransformerEncoder(dim=self.llama_model.config.hidden_size, num_layers=self.encoder_num_layers)
@@ -138,8 +140,8 @@ class Chat3D(nn.Module):
     def encode_and_project(self, feat, attr):
         pos_emb = self.pos_embedding(attr[:, :, :3], self.input_dim).permute(0, 2, 1)
         color_size_emb = self.color_size_proj(attr[:, :, 3:])
-        feat = feat + color_size_emb + pos_emb
-        feat = self.llama_norm(self.scene_proj(feat))
+        feat = self.input_norm(feat + color_size_emb + pos_emb)
+        feat = self.scene_proj(feat)
         return feat
 
     def forward_stage1(self, scene_feat, scene_attr, target_id, target_captions, is_eval=False, **kwargs):
@@ -164,8 +166,12 @@ class Chat3D(nn.Module):
             target_embeds.append(target_embed)
         target_embeds = torch.stack(target_embeds, dim=0).to(pc_embed.device)
         cosine_loss = F.cosine_embedding_loss(pc_embed, target_embeds.detach(), torch.tensor([1]).to(pc_embed.device))
+        l2_loss = F.mse_loss(pc_embed, target_embeds.detach())
+        cosine_score = 1. - cosine_loss.detach().cpu()
         return dict(
             loss=cosine_loss,
+            cosine_score=cosine_score,
+            l2_dis=l2_loss.detach().cpu()
         )
 
     def forward_stage2(self, scene_feat, scene_attr, scene_mask, target_id, text_input, is_eval=False, **kwargs):
@@ -360,3 +366,17 @@ class Chat3D(nn.Module):
 
     def _get_text_len(self, text):
         return self.llama_tokenizer(text, return_tensors="pt", add_special_tokens=False).input_ids.shape[1]
+
+    def maybe_autocast(self, dtype=torch.float16):
+        # if on cpu, don't use autocast
+        # if on gpu, use autocast with dtype if provided, otherwise use torch.float16
+        enable_autocast = self.device != torch.device("cpu")
+
+        if enable_autocast:
+            return torch.cuda.amp.autocast(dtype=dtype)
+        else:
+            return contextlib.nullcontext()
+
+    @property
+    def device(self):
+        return list(self.parameters())[0].device

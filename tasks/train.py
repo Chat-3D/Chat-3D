@@ -150,7 +150,7 @@ def evaluate(
 
     # scores = []
     sample_freq = len(val_loader) // 5
-    cosine_scores = []
+    cosine_scores, l2_distances = [], []
     preds = []
     targets = []
     save_preds = []
@@ -163,7 +163,8 @@ def evaluate(
         with torch.cuda.amp.autocast(enabled=config.fp16) and torch.no_grad():
             pred = model(**batch, is_eval=True)
             if "target_captions" in batch:
-                cosine_scores.append(1. - pred["loss"].detach().cpu())
+                cosine_scores.append(pred["cosine_score"])
+                l2_distances.append(pred["l2_dis"])
             if "custom_prompt" in batch:
                 if len(batch["ref_captions"][0]) > 0:
                     target = batch["ref_captions"]
@@ -195,6 +196,7 @@ def evaluate(
     logger.info(f"[epoch={epoch}, global steps={global_step}] Val Results:")
     if is_main_process() and len(cosine_scores) > 12:
         val_scores["cosine_sim"] = float(torch.stack(cosine_scores).mean())
+        val_scores["l2_dis"] = float(torch.stack(l2_distances).mean())
         for k, v in val_scores.items():
             logger.info(f"{k}: {v}")
 
