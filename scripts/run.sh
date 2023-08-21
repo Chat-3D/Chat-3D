@@ -15,6 +15,7 @@ stage=1  # change for different stage (1, 2, 3)
 epoch=3
 pretrained_path=""
 evaluate=False
+lr=5e-3
 
 
 ARGS=$(getopt -o "s:p:e:" -l "stage:,pretrained_path:,evaluate:" -- "$@")
@@ -32,6 +33,10 @@ while true; do
             ;;
         -e | --evaluate)
             evaluate="$2"
+            shift 2
+            ;;
+        -l | --lr)
+            lr="$2"
             shift 2
             ;;
         --)
@@ -57,6 +62,7 @@ torchrun  --nnodes=${NNODE} --nproc_per_node=${NUM_GPUS} \
           output_dir ${OUTPUT_DIR} \
           model.stage "$stage" \
           scheduler.epochs "$epoch" \
+          optimizer.lr "$lr" \
           model.max_txt_len "$max_txt_len" \
           pretrained_path "$pretrained_path" \
           evaluate "$evaluate"
