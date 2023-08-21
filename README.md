@@ -1,6 +1,6 @@
 # Chat-3D 
 
-This is a repo for paper "Chat-3D: Data-efficiently Tuning Large Language Model for Universal Dialogue of 3D Scenes". [[paper](https://arxiv.org/abs/2308.08769) ] [[project page](https://chat-3d.github.io/)]
+This is a repo for paper "Chat-3D: Data-efficiently Tuning Large Language Model for Universal Dialogue of 3D Scenes". [[paper](https://arxiv.org/abs/2308.08769)] [[project page](https://chat-3d.github.io/)]
 
 # Schedule
 
