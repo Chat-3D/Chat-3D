@@ -53,7 +53,7 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
 
 - Training (Instruction Tuning)
   
-  Simply run the following scripts to sequancially tune from Stage 1 to Stage 3. 
+  Simply run the following scripts to sequentially tune from Stage 1 to Stage 3. 
   
   ```shell
   # Stage 1
@@ -70,6 +70,14 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
                    --pretrained_path /path/to/pretrained_stage2.pth \
                    --lr 5e-5
   ```
+  
+  We train the model on 4 `A40` GPUs with 48GB VRAM. Here are some information about GPU usage and training time. (Note that we only use [ScanRefer](https://github.com/daveredrum/ScanRefer) data for training currently, it would cost more training time if we add more training data in the future.)
+  
+  | Stage | Batch Size | GPU Num | VRAM Usage per GPU | Training Time |
+  | --- | --- | --- | --- | --- |
+  | 1 | 12 | 4 | ~ 25 GB | ~ 5 min |
+  | 2 | 12 | 4 | ~ 45 GB | ~ 1 hour |
+  | 3 | 1 | 4 | ~ 25 GB | ~ 1.5 hour |
 
 - Inference
   
