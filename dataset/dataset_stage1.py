@@ -15,31 +15,11 @@ class S1PTDataset(PTBaseDataset):
 
     def __init__(self, ann_file, **kwargs):
         super().__init__()
-        self.data_root, self.attribute_file, self.captions_noun_file = ann_file[:3]
+        self.feat_file, self.attribute_file, self.anno_file = ann_file[:3]
 
-        logger.info('Load json file')
+        self.feats = torch.load(self.feat_file)
         self.attributes = json.load(open(self.attribute_file, 'r'))
-        self.captions_noun = json.load(open(self.captions_noun_file, 'r'))
-        annos = []
-        for k, v in self.captions_noun.items():
-            tmp = k.split("_")
-            obj_id = int(tmp[-1])
-            scene_id = "_".join(tmp[:-1])
-            target_captions = []
-            for caption in v:
-                if len(caption) == 0:
-                    continue
-                eid = caption.find(".")
-                if eid != -1:
-                    caption = caption[:eid]
-                caption = caption.replace(",", "").replace("(", "").replace(")", "")
-                target_captions.append(caption)
-            annos.append({
-                "scene_id": scene_id,
-                "obj_id": obj_id,
-                "captions": target_captions
-            })
-        self.anno = annos
+        self.anno = json.load(open(self.anno_file, 'r'))
 
     def __len__(self):
         return len(self.anno)

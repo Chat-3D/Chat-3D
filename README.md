@@ -7,13 +7,14 @@ This is a repo for paper "Chat-3D: Data-efficiently Tuning Large Language Model 
 
 **Done**
 
-- [x] High-quality object-centric instruction dataset 
+- [X] High-quality object-centric instruction dataset 
+- [X] Guide for data preparation and model training/inference locally
   
 **Doing**
 
-- [ ] Guide for data preparation and model training/inference locally
 - [ ] Online demo
 - [ ] Various settings of training data and model architecture
+- [ ] Adapt to 3D QA, Caption, Grounding tasks
 - [ ] Add a segmantation head to complete the pipeline
 - [ ] ...
 
@@ -40,9 +41,16 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
 
   - Change the `llama_model_path` in [config.py](./scripts/config.py) to the location of `vicuna-7b-v0`.
   
-- 3D point cloud and extracted features:
 
-  - For training and inference on ScanRefer
+- Annotations and extracted features:
+
+  **For simplicity, we have made the annotations and extracted features available on [Google Drive](https://drive.google.com/drive/folders/1jQQFHeazZQpxKXFZXonrTu2HYSJRlA6T?usp=sharing).** Here are some brief explanations of the preparation:
+
+  - Based on the annotations from [ScanNet](https://github.com/ScanNet/ScanNet) , we extract attributes (location, size, color) of objects from different scenes. 
+  
+  - We use [ULIP-2](https://github.com/salesforce/ULIP) to extract features of 3D objects. 
+  
+  - The captions utilized in stage 1 and stage 2 are obtained from the annotations of [ScanRefer](https://github.com/daveredrum/ScanRefer).
   
   
 - Object-centric dataset
@@ -104,7 +112,7 @@ If you find this project useful in your research, please consider cite:
 
 Stay tuned for our project. 🔥
 
-If you have any questions or suggestions, feel free to drop us an email `wangzehan01@zju.edu.cn`, `huanghaifeng@zju.edu.cn` or open an issue.
+If you have any questions or suggestions, feel free to drop us an email (`wangzehan01@zju.edu.cn`, `huanghaifeng@zju.edu.cn`) or open an issue.
 
 ## 😊 Acknowledgement
 

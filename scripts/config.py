@@ -1,54 +1,53 @@
 # ========================= data ==========================
-anno_root = "anno"  # annotation dir
-pc_encoder = "ulip2"  #
-feat_root = f"/root/autodl-tmp/scene-LLaMA/datasets/referit3d/pcd_feats_{pc_encoder}"  # data dir for extracted features from pretrained 3d encoder
-train_instance_file = f"{anno_root}/scannet_train_instances.json"
-val_instance_file = f"{anno_root}/scannet_val_instances.json"
+anno_root = "annotations"  # annotation dir
+pc_encoder = "ulip2"
+feat_file = f"{anno_root}/scannet_{pc_encoder}_feats.pt"
+attribute_file = f"{anno_root}/scannet_attributes.json"
 train_file_s1 = [
     [
-        feat_root,
-        train_instance_file,
-        f"{anno_root}/scanrefer_train_captions_noun.json",
+        feat_file,
+        attribute_file,
+        f"{anno_root}/scanrefer_train_stage1.json",
     ],
 ]
 train_file_s2 = [
     [
-        feat_root,
-        train_instance_file,
+        feat_file,
+        attribute_file,
         f"{anno_root}/scanrefer_train_stage2.json",
     ]
 ]
 train_file_s3 = [
     [
-        feat_root,
-        train_instance_file,
+        feat_file,
+        attribute_file,
         f"{anno_root}/scanrefer_train_conversation.json",
     ],
     [
-        feat_root,
-        train_instance_file,
-        f"{anno_root}/scanrefer_train_describe.json"
+        feat_file,
+        attribute_file,
+        f"{anno_root}/scanrefer_train_detail.json"
     ]
 ]
 val_file_s1 = [
     [
-        feat_root,
-        val_instance_file,
-        f"{anno_root}/scanrefer_val_captions_noun.json",
+        feat_file,
+        attribute_file,
+        f"{anno_root}/scanrefer_val_stage1.json",
     ]
 ]
 val_file_s2 = [
     [
-        feat_root,
-        val_instance_file,
-        f"{anno_root}/scanrefer_val_concise.json"
+        feat_file,
+        attribute_file,
+        f"{anno_root}/scanrefer_val_stage2.json"
     ]
 ]
 val_file_s3 = [
     [
-        feat_root,
-        val_instance_file,
-        f"{anno_root}/scanrefer_val_describe100.json"
+        feat_file,
+        attribute_file,
+        f"{anno_root}/scanrefer_val_stage3.json"
     ],
 ]
 

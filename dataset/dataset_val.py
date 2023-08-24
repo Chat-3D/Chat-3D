@@ -15,10 +15,10 @@ class ValPTDataset(PTBaseDataset):
 
     def __init__(self, ann_file, system="", stage=2, **kwargs):
         super().__init__()
-        self.data_root, self.attribute_file, self.prompt_file= ann_file[:3]
+        self.feat_file, self.attribute_file, self.prompt_file = ann_file[:3]
         self.system = system
 
-        logger.info('Load json file')
+        self.feats = torch.load(self.feat_file)
         self.attributes = json.load(open(self.attribute_file, 'r'))
         self.anno = json.load(open(self.prompt_file, 'r'))
         if stage == 2:

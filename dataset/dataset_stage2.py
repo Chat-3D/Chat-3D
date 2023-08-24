@@ -15,20 +15,18 @@ class S2PTDataset(PTBaseDataset):
 
     def __init__(self, ann_file, **kwargs):
         super().__init__()
-        self.data_root, self.attribute_file, self.label_file = ann_file[:3]
+        self.feat_file, self.attribute_file, self.anno_file = ann_file[:3]
 
-        logger.info('Load json file')
+        self.feats = torch.load(self.feat_file)
         self.attributes = json.load(open(self.attribute_file, 'r'))
-        self.anno = json.load(open(self.label_file, 'r'))
-        # self.captions = json.load(open(self.captions_file, 'r'))
+        self.anno = json.load(open(self.anno_file, 'r'))
 
     def __len__(self):
         return len(self.anno)
 
     def __getitem__(self, index):
-        caption = self.anno[index]["caption"]
         scene_id, obj_id, scene_feat, scene_attr = self.get_anno(index)
-        # ref_captions = self.captions[f"{scene_id}_{obj_id}"]
+        caption = self.anno[index]["caption"]
         return scene_feat, scene_attr, obj_id, caption
 
 

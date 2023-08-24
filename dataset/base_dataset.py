@@ -13,8 +13,8 @@ class PTBaseDataset(Dataset):
     def __init__(self):
         self.media_type = "point_cloud"
         self.anno = None
-        self.data_root = None
         self.attributes = None
+        self.feats = None
 
     def __getitem__(self, index):
         raise NotImplementedError
@@ -26,18 +26,14 @@ class PTBaseDataset(Dataset):
         scene_id = self.anno[index]["scene_id"]
         obj_id = self.anno[index]["obj_id"]
         scene_attr = self.attributes[scene_id]
+        obj_num = len(scene_attr["locs"])
         scene_locs = torch.tensor(scene_attr["locs"])
         scene_colors = torch.tensor(scene_attr["colors"])
         scene_attr = torch.cat([scene_locs, scene_colors], dim=1)
-        scene_feat_dir = os.path.join(self.data_root, scene_id)
         scene_feat = []
-        for _i, file_path in enumerate(glob.glob(os.path.join(scene_feat_dir, "*.pt"))):
-            oid = int(file_path.split("/")[-1][:-3])
-            assert (_i == oid)
-            if not os.path.exists(file_path):
-                print(file_path)
-                raise FileNotFoundError
-            scene_feat.append(torch.load(file_path))
+        for _i in range(obj_num):
+            item_id = "_".join([scene_id, f"{_i:02}"])
+            scene_feat.append(self.feats[item_id])
         scene_feat = torch.stack(scene_feat, dim=0)
         return scene_id, obj_id, scene_feat, scene_attr
 

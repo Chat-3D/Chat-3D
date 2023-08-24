@@ -139,8 +139,8 @@ class Chat3D(nn.Module):
 
     def encode_and_project(self, feat, attr):
         pos_emb = self.pos_embedding(attr[:, :, :3], self.input_dim).permute(0, 2, 1)
-        color_size_emb = self.color_size_proj(attr[:, :, 3:])
-        feat = self.input_norm(feat + color_size_emb + pos_emb)
+        size_color_emb = self.color_size_proj(attr[:, :, 3:])
+        feat = self.input_norm(feat + size_color_emb + pos_emb)
         feat = self.scene_proj(feat)
         return feat
 

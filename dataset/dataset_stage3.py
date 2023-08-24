@@ -18,7 +18,7 @@ class S3PTDataset(PTBaseDataset):
 
     def __init__(self, ann_file, system="", **kwargs):
         super().__init__()
-        self.data_root, self.attribute_file, self.conv_file = ann_file[:3]
+        self.feat_file, self.attribute_file, self.conv_file = ann_file[:3]
 
         self.system = system
         self.role = ("Human", "Assistant")
@@ -27,7 +27,7 @@ class S3PTDataset(PTBaseDataset):
         self.begin_signal = "###"
         self.end_signal = " "
 
-        logger.info('Load json file')
+        self.feats = torch.load(self.feat_file)
         self.attributes = json.load(open(self.attribute_file, 'r'))
         self.convs = json.load(open(self.conv_file, 'r'))
         annos = []
@@ -49,10 +49,6 @@ class S3PTDataset(PTBaseDataset):
 
     def process_qa(self, qas, msg=""):
         conversation = self.system + self.end_signal
-        # conversation += (
-        #     # self.begin_signal + self.role[0] + ": " +
-        #     " " + self.pc_token + " " + self.scene_token + msg.rstrip() + self.end_signal
-        # )
         for idx, qa in enumerate(qas):
             q = qa["Question"]
             a = qa["Answer"]
