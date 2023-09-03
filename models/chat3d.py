@@ -44,7 +44,7 @@ class Chat3D(nn.Module):
         prompt_template = config.get("prompt_template", "")
         max_txt_len = config.get("max_txt_len", 32)
         end_sym = config.get("end_sym", '\n')
-        self.system = config.get("system", "")
+        self.system_path = config.get("system_path", "")
         self.begin_signal = "###"
         self.role = ("Human", "Assistant")
         self.pc_start_token, self.pc_end_token = "<Target>", "</Target>"
@@ -113,9 +113,10 @@ class Chat3D(nn.Module):
 
     def process_prompt(self, prompt_path, prompt_template):
         with open(prompt_path, 'r') as f:
-            raw_prompts = f.read().splitlines()
-        filted_prompts = [raw_prompt for raw_prompt in raw_prompts]
-        prompt_list = [self.system + " " + prompt_template.format(p) for p in filted_prompts]
+            prompt_candidates = f.read().splitlines()
+        with open(self.system_path, "r") as f:
+            system = "\n".join([x.strip() for x in f.readlines()])
+        prompt_list = [system + " " + prompt_template.format(p) for p in prompt_candidates]
         logger.info(f'Load {len(prompt_list)} training prompts')
         logger.info(f'Prompt: {prompt_list}')
         return prompt_list
@@ -169,7 +170,7 @@ class Chat3D(nn.Module):
         l2_loss = F.mse_loss(pc_embed, target_embeds.detach())
         cosine_score = 1. - cosine_loss.detach().cpu()
         return dict(
-            loss=cosine_loss,
+            loss=cosine_loss + l2_loss,
             cosine_score=cosine_score,
             l2_dis=l2_loss.detach().cpu()
         )
@@ -259,8 +260,8 @@ class Chat3D(nn.Module):
             p_2_embeds = self.llama_model.model.embed_tokens(p_2_tokens.input_ids)
             input_embeds = torch.cat([p_0_embeds, tmp_pc_embed, p_1_embeds, tmp_scene_embed, p_2_embeds], dim=1)
 
-            sep1 = self.begin_signal + self.role[0] + ": "
-            sep2 = self.begin_signal + self.role[1] + ": "
+            sep1 = self.begin_signal + self.role[0] + ":"
+            sep2 = self.begin_signal + self.role[1] + ":"
             raw_text = p_2.split(sep2)
             for _idx in range(1, len(raw_text)):
                 raw_text[_idx] = sep2 + raw_text[_idx]
@@ -279,7 +280,7 @@ class Chat3D(nn.Module):
             cur_len += self._get_text_len(raw_text[-1].rstrip())
             if cur_len != answer_targets.shape[1]:
                 print(f"The final length is not equal to the original prompt: {prompt}")
-            assert cur_len == answer_targets.shape[1]
+            assert cur_len == answer_targets.shape[1], (cur_len, answer_targets.shape[1])
 
             max_len = max(max_len, input_embeds.shape[1])
             input_embed_list.append(input_embeds)

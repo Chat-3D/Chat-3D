@@ -31,14 +31,15 @@ class S1PTDataset(PTBaseDataset):
 
 
 def s1_collate_fn(batch):
-    scene_feats, scene_attrs, obj_ids, target_captions = zip(*batch)
+    scene_feats, scene_attrs, obj_ids, target_ids, target_captions = zip(*batch)
     batch_scene_feat, batch_scene_attr, batch_scene_mask = process_batch_data(scene_feats, scene_attrs)
-    obj_ids = torch.tensor(obj_ids)
+    target_ids = torch.tensor(target_ids)
     return {
         "scene_feat": batch_scene_feat,
         "scene_attr": batch_scene_attr,
         "scene_mask": batch_scene_mask,
-        "target_id": obj_ids,
+        "obj_id": obj_ids,
+        "target_id": target_ids,
         "target_captions": target_captions,
         # "ids": index
     }

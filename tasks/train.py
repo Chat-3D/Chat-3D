@@ -176,7 +176,7 @@ def evaluate(
                 batch_size = len(pred)
                 for bi in range(batch_size):
                     scene_id = batch["scene_id"][bi]
-                    obj_id = int(batch["target_id"][bi].detach().cpu())
+                    obj_id = int(batch["obj_id"][bi])
                     qid = batch["qid"][bi]
                     prompt = batch["custom_prompt"][bi]
                     tmp_pred = pred[bi]

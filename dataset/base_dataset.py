@@ -29,13 +29,17 @@ class PTBaseDataset(Dataset):
         obj_num = len(scene_attr["locs"])
         scene_locs = torch.tensor(scene_attr["locs"])
         scene_colors = torch.tensor(scene_attr["colors"])
+        obj_ids = scene_attr["obj_ids"] if "obj_ids" in scene_attr else [_i for _i in range(obj_num)]
         scene_attr = torch.cat([scene_locs, scene_colors], dim=1)
         scene_feat = []
-        for _i in range(obj_num):
-            item_id = "_".join([scene_id, f"{_i:02}"])
+        target_id = 0
+        for _i, _id in enumerate(obj_ids):
+            if _id == obj_id:
+                target_id = _i
+            item_id = "_".join([scene_id, f"{_id:02}"])
             scene_feat.append(self.feats[item_id])
         scene_feat = torch.stack(scene_feat, dim=0)
-        return scene_id, obj_id, scene_feat, scene_attr
+        return scene_id, obj_id, target_id, scene_feat, scene_attr
 
 
 def process_batch_data(scene_feats, scene_attrs):

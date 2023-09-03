@@ -111,7 +111,7 @@ dist_url = "env://"
 device = "cuda"
 
 # ========================= others ==========================
-output_dir = None  # output dir
+output_dir = "outputs/tmp"  # output dir
 resume = False  # if True, load optimizer and scheduler states as well
 debug = False
 log_freq = 100

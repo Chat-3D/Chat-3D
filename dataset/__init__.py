@@ -46,7 +46,7 @@ def create_dataset(config):
     for train_file in train_files:
         dataset_kwargs = dict(
             ann_file=train_file,
-            system=config.model.system,
+            system_path=config.model.system_path,
             stage=config.model.stage
         )
         datasets.append(train_dataset_cls(**dataset_kwargs))
@@ -58,7 +58,7 @@ def create_dataset(config):
     for val_file in val_files:
         dataset_kwargs = dict(
             ann_file=val_file,
-            system=config.model.system,
+            system_path=config.model.system_path,
             stage=config.model.stage
         )
         datasets.append(val_dataset_cls(**dataset_kwargs))

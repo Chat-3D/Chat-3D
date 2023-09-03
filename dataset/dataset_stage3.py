@@ -16,11 +16,11 @@ logger = logging.getLogger(__name__)
 
 class S3PTDataset(PTBaseDataset):
 
-    def __init__(self, ann_file, system="", **kwargs):
+    def __init__(self, ann_file, system_path="", **kwargs):
         super().__init__()
-        self.feat_file, self.attribute_file, self.conv_file = ann_file[:3]
-
-        self.system = system
+        self.feat_file, self.attribute_file, self.conv_file, repeat = ann_file[:4]
+        with open(system_path, "r") as f:
+            self.system = "\n".join([x.strip() for x in f.readlines()])
         self.role = ("Human", "Assistant")
         self.pc_token = "<Target><TargetHere></Target>"
         self.scene_token = "<Scene><SceneHere></Scene>"
@@ -42,7 +42,7 @@ class S3PTDataset(PTBaseDataset):
                 "obj_id": obj_id,
                 "QA": v
             })
-        self.anno = annos
+        self.anno = annos * repeat
 
     def __len__(self):
         return len(self.anno)
@@ -52,27 +52,27 @@ class S3PTDataset(PTBaseDataset):
         for idx, qa in enumerate(qas):
             q = qa["Question"]
             a = qa["Answer"]
-            a = a.replace("\n\n", " ")
-            conversation += (self.begin_signal + self.role[0] + ": " + q + self.end_signal)
-            conversation += (self.begin_signal + self.role[1] + ": " + a + self.end_signal)
+            conversation += (self.begin_signal + self.role[0] + ": " + q.rstrip() + self.end_signal)
+            conversation += (self.begin_signal + self.role[1] + ": " + a.rstrip() + self.end_signal)
         conversation += self.begin_signal
         return conversation
 
     def __getitem__(self, index):
-        scene_id, obj_id, scene_feat, scene_attr = self.get_anno(index)
+        scene_id, obj_id, target_id, scene_feat, scene_attr = self.get_anno(index)
         conversation = self.process_qa(self.anno[index]["QA"])
-        return scene_feat, scene_attr, obj_id, conversation
+        return scene_feat, scene_attr, obj_id, target_id, conversation
 
 
 def s3_collate_fn(batch):
-    scene_feats, scene_attrs, obj_ids, conversations = zip(*batch)
+    scene_feats, scene_attrs, obj_ids, target_ids, conversations = zip(*batch)
     batch_scene_feat, batch_scene_attr, batch_scene_mask = process_batch_data(scene_feats, scene_attrs)
-    obj_ids = torch.tensor(obj_ids)
+    target_ids = torch.tensor(target_ids)
     return {
         "scene_feat": batch_scene_feat,
         "scene_attr": batch_scene_attr,
         "scene_mask": batch_scene_mask,
-        "target_id": obj_ids,
+        "obj_id": obj_ids,
+        "target_id": target_ids,
         "conversations": conversations
         # "ids": index
     }

@@ -89,7 +89,7 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
 
 - Inference
   
-  - Use one GPU for inference (set `NUM_GPUS=1` in [run.sh](./scripts/run.sh)).
+  Use one GPU for inference (set `NUM_GPUS=1` in [run.sh](./scripts/run.sh)).
   ```shell
   ./scripts/run.sh --stage 3 \
                    --pretrained_path /path/to/pretrained_stage3.pth \
