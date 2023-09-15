@@ -2,7 +2,7 @@
 anno_root = "annotations"  # annotation dir
 pc_encoder = "ulip2"
 feat_file = f"{anno_root}/scannet_{pc_encoder}_feats.pt"
-attribute_file = f"{anno_root}/scannet_attributes_old.json"
+attribute_file = f"{anno_root}/scannet_attributes.json"
 train_file_s1 = [
     [
         feat_file,
@@ -81,7 +81,7 @@ val_file_s3 = [
     [
         feat_file,
         attribute_file,
-        f"{anno_root}/scanqa_val_gtobj.json"
+        f"{anno_root}/scanrefer_val_stage3.json"
     ],
 ]
 
