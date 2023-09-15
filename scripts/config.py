@@ -2,32 +2,66 @@
 anno_root = "annotations"  # annotation dir
 pc_encoder = "ulip2"
 feat_file = f"{anno_root}/scannet_{pc_encoder}_feats.pt"
-attribute_file = f"{anno_root}/scannet_attributes.json"
+attribute_file = f"{anno_root}/scannet_attributes_old.json"
 train_file_s1 = [
     [
         feat_file,
         attribute_file,
         f"{anno_root}/scanrefer_train_stage1.json",
     ],
+    # [
+    #     feat_file,
+    #     attribute_file,
+    #     f"{anno_root}/nr3d_train_stage1.json",
+    # ],
+    # [
+    #     feat_file,
+    #     attribute_file,
+    #     f"{anno_root}/scannet_train_stage1.json",
+    # ],
+    # [
+    #     f"{anno_root}/objaverse_{pc_encoder}_feats.pt",
+    #     f"{anno_root}/objaverse_attributes.json",
+    #     f"{anno_root}/objaverse_stage1.json"
+    # ]
 ]
 train_file_s2 = [
     [
         feat_file,
         attribute_file,
         f"{anno_root}/scanrefer_train_stage2.json",
-    ]
+    ],
+    # [
+    #     feat_file,
+    #     attribute_file,
+    #     f"{anno_root}/nr3d_train_stage2.json"
+    # ]
 ]
 train_file_s3 = [
     [
         feat_file,
         attribute_file,
-        f"{anno_root}/scanrefer_train_conversation.json",
+        f"{anno_root}/scanqa_train_stage3.json",
+        1
     ],
-    [
-        feat_file,
-        attribute_file,
-        f"{anno_root}/scanrefer_train_detail.json"
-    ]
+    # [
+    #     feat_file,
+    #     attribute_file,
+    #     f"{anno_root}/scanrefer_train_conversation.json",
+    #     3
+    # ],
+    # [
+    #     feat_file,
+    #     attribute_file,
+    #     f"{anno_root}/scanrefer_train_detail.json",
+    #     1
+    # ],
+    # [
+    #     feat_file,
+    #     attribute_file,
+    #     f"{anno_root}/nr3d_train_tf.json",
+    #     1
+    # ]
 ]
 val_file_s1 = [
     [
@@ -47,7 +81,7 @@ val_file_s3 = [
     [
         feat_file,
         attribute_file,
-        f"{anno_root}/scanrefer_val_stage3.json"
+        f"{anno_root}/scanqa_val_gtobj.json"
     ],
 ]
 
@@ -59,7 +93,7 @@ stop_key = None
 
 # ========================= input ==========================
 s1_batch_size = 12
-s2_batch_size = 12
+s2_batch_size = 8
 s3_batch_size = 1
 # max_txt_l = 32
 
@@ -76,11 +110,11 @@ model = dict(
     mlp_dropout=0.1,
     low_resource=False,
     prompt_path="prompts/concise_description.txt",
-    system="###System: In this task, you have access to comprehensive information about objects within a 3D scene. Specifically, the focus is on the target object, which is identified between the tags \"<Target>\" and \"</Target>\". Additionally, the details of all the objects present in the scene can be found between the tags \"<Scene>\" and \"</Scene>\". <Target><TargetHere></Target> <Scene><SceneHere></Scene>",
+    system_path="prompts/system.txt",
     prompt_template="###Human: {} ###Assistant: ",
-    max_txt_len=32,
+    max_txt_len=512,
     end_sym="###",
-    stage=2
+    stage=3
 )
 
 optimizer = dict(

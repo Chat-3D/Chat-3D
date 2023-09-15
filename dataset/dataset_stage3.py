@@ -22,27 +22,30 @@ class S3PTDataset(PTBaseDataset):
         with open(system_path, "r") as f:
             self.system = "\n".join([x.strip() for x in f.readlines()])
         self.role = ("Human", "Assistant")
-        self.pc_token = "<Target><TargetHere></Target>"
-        self.scene_token = "<Scene><SceneHere></Scene>"
+        # self.pc_token = "<Target><TargetHere></Target>"
+        # self.scene_token = "<Scene><SceneHere></Scene>"
         self.begin_signal = "###"
         self.end_signal = " "
 
         self.feats = torch.load(self.feat_file)
         self.attributes = json.load(open(self.attribute_file, 'r'))
         self.convs = json.load(open(self.conv_file, 'r'))
-        annos = []
-        for k, v in self.convs.items():
-            if len(v) == 0:
-                continue
-            tmp = k.split("_")
-            obj_id = int(tmp[-1])
-            scene_id = "_".join(tmp[:-1])
-            annos.append({
-                "scene_id": scene_id,
-                "obj_id": obj_id,
-                "QA": v
-            })
-        self.anno = annos * repeat
+        if isinstance(self.convs, list):
+            self.anno = self.convs * repeat
+        else:
+            annos = []
+            for k, v in self.convs.items():
+                if len(v) == 0:
+                    continue
+                tmp = k.split("_")
+                obj_id = int(tmp[-1])
+                scene_id = "_".join(tmp[:-1])
+                annos.append({
+                    "scene_id": scene_id,
+                    "obj_id": obj_id,
+                    "QA": v
+                })
+            self.anno = annos * repeat
 
     def __len__(self):
         return len(self.anno)

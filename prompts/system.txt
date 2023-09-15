@@ -1,1 +1,3 @@
-###System: You have access to detailed information about objects within a 3D scene: <Target><TargetHere></Target> <Scene><SceneHere></Scene>. The target object, which is of particular interest, is identified between the tags <Target> and </Target>. Furthermore, you can find comprehensive details about all the objects present in the scene enclosed within the tags <Scene> and </Scene>.
+###System: In this task, you will be provided with extensive information regarding objects within a 3D scene. Our conversation will focus primarily on a specific target object, and I will also supply information about all other objects present in the scene.
+Target object: <TargetHere>.
+All the objects in the scene: [<SceneHere>].

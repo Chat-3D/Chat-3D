@@ -25,9 +25,9 @@ class S1PTDataset(PTBaseDataset):
         return len(self.anno)
 
     def __getitem__(self, index):
-        scene_id, obj_id, scene_feat, scene_attr = self.get_anno(index)
+        scene_id, obj_id, target_id, scene_feat, scene_attr = self.get_anno(index)
         target_captions = self.anno[index]["captions"]
-        return scene_feat, scene_attr, obj_id, target_captions
+        return scene_feat, scene_attr, obj_id, target_id, target_captions
 
 
 def s1_collate_fn(batch):

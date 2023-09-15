@@ -44,7 +44,7 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
 
 - Annotations and extracted features:
 
-  **For simplicity, we have made the annotations and extracted features available on [Google Drive](https://drive.google.com/drive/folders/1jQQFHeazZQpxKXFZXonrTu2HYSJRlA6T?usp=sharing).** Here are some brief explanations of the preparation:
+  **For simplicity, we have made all the annotations available in [annotations](./annotations) dir and extracted features available on [Google Drive](https://drive.google.com/drive/folders/1jQQFHeazZQpxKXFZXonrTu2HYSJRlA6T?usp=sharing).** Here are some brief explanations of the preparation:
 
   - Based on the annotations from [ScanNet](https://github.com/ScanNet/ScanNet) , we extract attributes (location, size, color) of objects from different scenes. 
   

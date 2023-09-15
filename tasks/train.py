@@ -22,7 +22,11 @@ from utils.config_utils import setup_main
 from utils.distributed import get_rank, get_world_size, is_main_process
 from utils.logger import log_dict_to_wandb, setup_wandb
 
-import aac_metrics
+from pycocoevalcap.bleu.bleu import Bleu
+from pycocoevalcap.meteor.meteor import Meteor
+from pycocoevalcap.rouge.rouge import Rouge
+from pycocoevalcap.cider.cider import Cider
+
 import numpy as np
 from tqdm import tqdm
 
@@ -31,6 +35,14 @@ import os
 
 logger = logging.getLogger(__name__)
 max_bleus = [0.] * 4
+
+scorers = [
+    (Bleu(4), ["Bleu_1", "Bleu_2", "Bleu_3", "Bleu_4"]),
+    (Meteor(), "METEOR"),
+    (Rouge(), "ROUGE_L"),
+    (Cider(), "CIDEr"),
+    # (Spice(), "SPICE")
+]
 
 def train(
     model,
@@ -185,31 +197,54 @@ def evaluate(
                         "obj_id": obj_id,
                         "qid": qid,
                         "prompt": prompt,
-                        "pred": tmp_pred
+                        "pred": tmp_pred,
+                        # "ref_captions": batch["ref_captions"][bi]
                     })
                 if i % sample_freq == 0:
                     print(save_preds[-1])
                 if early_stop:
                     break
+                # break
+
+    if is_main_process() and len(save_preds) > 20:
+        save_preds = sorted(save_preds, key=lambda x: f"{x['scene_id']}_{x['obj_id']:03}_{x['qid']}")
+        with open(os.path.join(config.output_dir, f"preds_epoch{epoch}_step{global_step}.json"), "w") as f:
+            json.dump(save_preds, f, indent=4)
 
     val_scores = {}
-    logger.info(f"[epoch={epoch}, global steps={global_step}] Val Results:")
     if is_main_process() and len(cosine_scores) > 12:
         val_scores["cosine_sim"] = float(torch.stack(cosine_scores).mean())
         val_scores["l2_dis"] = float(torch.stack(l2_distances).mean())
-        for k, v in val_scores.items():
-            logger.info(f"{k}: {v}")
-
-    if is_main_process() and len(preds) > 12:
-        val_scores, _ = aac_metrics.evaluate(preds, targets)
         logger.info(f"[epoch={epoch}, global steps={global_step}] Val Results:")
         for k, v in val_scores.items():
             logger.info(f"{k}: {v}")
 
-    if is_main_process() and len(save_preds) > 20:
-        save_preds = sorted(save_preds, key=lambda x: f"{x['scene_id']}_{x['obj_id']:03}_{x['qid']:02}")
-        with open(os.path.join(config.output_dir, f"preds_epoch{epoch}_step{global_step}.json"), "w") as f:
-            json.dump(save_preds, f, indent=4)
+    # ScanQA eval
+    # if is_main_process() and len(preds) > 12:
+    #     # val_scores, _ = aac_metrics.evaluate(preds, targets)
+    #     tmp_preds = {}
+    #     tmp_targets = {}
+    #     for output in save_preds:
+    #         item_id = f"{output['scene_id']}_{output['obj_id']}_{output['qid']}"
+    #         pred = output["pred"]
+    #         if ": " in pred:
+    #             pred = pred.split(": ")[1].strip()
+    #         if len(pred) > 0 and pred[-1] == ".":
+    #             pred = pred[:-1]
+    #         tmp_preds[item_id] = [pred]
+    #         tmp_targets[item_id] = output["ref_captions"]
+    #     for scorer, method in scorers:
+    #         score, scores = scorer.compute_score(tmp_targets, tmp_preds)
+    #         if type(method) == list:
+    #             for sc, scs, m in zip(score, scores, method):
+    #                 # print("%s: %0.3f" % (m, sc * 100))
+    #                 val_scores[m] = sc
+    #         else:
+    #             # print("%s: %0.3f" % (method, score * 100))
+    #             val_scores[method] = score
+    #     logger.info(f"[epoch={epoch}, global steps={global_step}] Val Results:")
+    #     for k, v in val_scores.items():
+    #         logger.info(f"{k}: {v}")
 
     return val_scores
 
