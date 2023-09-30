@@ -80,7 +80,7 @@ def train(
             d.sampler.set_epoch(epoch)
     train_loader = MetaLoader(name2loader=dict(list(zip(media_types, train_loaders))))
 
-    eval_freq = 500  # len(train_loader)
+    eval_freq = 1000  # len(train_loader)
 
     iterator = metric_logger.log_every(train_loader, log_freq, header)
     for i, (media_type, batch) in enumerate(iterator):
@@ -198,7 +198,7 @@ def evaluate(
                         "qid": qid,
                         "prompt": prompt,
                         "pred": tmp_pred,
-                        # "ref_captions": batch["ref_captions"][bi]
+                        "ref_captions": batch["ref_captions"][bi]
                     })
                 if i % sample_freq == 0:
                     print(save_preds[-1])
@@ -220,31 +220,26 @@ def evaluate(
             logger.info(f"{k}: {v}")
 
     # ScanQA eval
-    # if is_main_process() and len(preds) > 12:
-    #     # val_scores, _ = aac_metrics.evaluate(preds, targets)
-    #     tmp_preds = {}
-    #     tmp_targets = {}
-    #     for output in save_preds:
-    #         item_id = f"{output['scene_id']}_{output['obj_id']}_{output['qid']}"
-    #         pred = output["pred"]
-    #         if ": " in pred:
-    #             pred = pred.split(": ")[1].strip()
-    #         if len(pred) > 0 and pred[-1] == ".":
-    #             pred = pred[:-1]
-    #         tmp_preds[item_id] = [pred]
-    #         tmp_targets[item_id] = output["ref_captions"]
-    #     for scorer, method in scorers:
-    #         score, scores = scorer.compute_score(tmp_targets, tmp_preds)
-    #         if type(method) == list:
-    #             for sc, scs, m in zip(score, scores, method):
-    #                 # print("%s: %0.3f" % (m, sc * 100))
-    #                 val_scores[m] = sc
-    #         else:
-    #             # print("%s: %0.3f" % (method, score * 100))
-    #             val_scores[method] = score
-    #     logger.info(f"[epoch={epoch}, global steps={global_step}] Val Results:")
-    #     for k, v in val_scores.items():
-    #         logger.info(f"{k}: {v}")
+    if is_main_process() and len(preds) > 12:
+        tmp_preds = {}
+        tmp_targets = {}
+        for output in save_preds:
+            item_id = f"{output['scene_id']}_{output['obj_id']}_{output['qid']}"
+            pred = output["pred"]
+            if ": " in pred:
+                pred = pred.split(": ")[1].strip()
+            tmp_preds[item_id] = [pred]
+            tmp_targets[item_id] = output["ref_captions"]
+        for scorer, method in scorers:
+            score, scores = scorer.compute_score(tmp_targets, tmp_preds)
+            if type(method) == list:
+                for sc, scs, m in zip(score, scores, method):
+                    val_scores[m] = sc
+            else:
+                val_scores[method] = score
+        logger.info(f"[epoch={epoch}, global steps={global_step}] Val Results:")
+        for k, v in val_scores.items():
+            logger.info(f"{k}: {v}")
 
     return val_scores
 
