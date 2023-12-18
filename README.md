@@ -3,26 +3,18 @@
 This is a repo for paper "Chat-3D: Data-efficiently Tuning Large Language Model for Universal Dialogue of 3D Scenes". 
 [[paper](https://arxiv.org/abs/2308.08769)], [[project page](https://chat-3d.github.io/)]
 
-### To Do List
+### News
 
-**Done**
-
-- [X] High-quality object-centric instruction dataset 
-- [X] Guide for data preparation and model training/inference locally
-  
-**Doing**
-
-- [ ] Online demo
-- [ ] Various settings of training data and model architecture
-- [ ] Adapt to 3D QA, Caption, Grounding tasks
-- [ ] Add a segmantation head to complete the pipeline
-- [ ] ...
+[2023.12.15] 🔥 We release a new version: Chat-3D v2 [[code](https://github.com/Chat-3D/Chat-3D-v2), [paper](https://arxiv.org/abs/2312.08168)], achieving strong performance on various 3D scene-language tasks.
 
 ## 🔨 Preparation
 
 - Prepare the environment:
 
   ```shell
+  conda create -n chat-3d-v2 python=3.9.17
+  conda activate chat-3d-v2
+  conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia
   pip install -r requirements.txt
   ```
   
@@ -100,13 +92,17 @@ Vicuna-7B as the LLM in our model, which is finetuned from LLaMA-7B.
 
 If you find this project useful in your research, please consider cite:
 ```BibTeX
-@misc{wang2023chat3d,
-      title={Chat-3D: Data-efficiently Tuning Large Language Model for Universal Dialogue of 3D Scenes}, 
-      author={Zehan Wang and Haifeng Huang and Yang Zhao and Ziang Zhang and Zhou Zhao},
-      year={2023},
-      eprint={2308.08769},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{wang2023chat,
+  title={Chat-3d: Data-efficiently tuning large language model for universal dialogue of 3d scenes},
+  author={Wang, Zehan and Huang, Haifeng and Zhao, Yang and Zhang, Ziang and Zhao, Zhou},
+  journal={arXiv preprint arXiv:2308.08769},
+  year={2023}
+}
+@article{huang2023chat,
+  title={Chat-3D v2: Bridging 3D Scene and Large Language Models with Object Identifiers},
+  author={Huang, Haifeng and Wang, Zehan and Huang, Rongjie and Liu, Luping and Cheng, Xize and Zhao, Yang and Jin, Tao and Zhao, Zhou},
+  journal={arXiv preprint arXiv:2312.08168},
+  year={2023}
 }
 ```
 
