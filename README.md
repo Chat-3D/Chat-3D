@@ -12,8 +12,8 @@ This is a repo for paper "Chat-3D: Data-efficiently Tuning Large Language Model 
 - Prepare the environment:
 
   ```shell
-  conda create -n chat-3d-v2 python=3.9.17
-  conda activate chat-3d-v2
+  conda create -n chat-3d python=3.9.17
+  conda activate chat-3d
   conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia
   pip install -r requirements.txt
   ```
