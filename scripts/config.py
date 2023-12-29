@@ -38,24 +38,24 @@ train_file_s2 = [
     # ]
 ]
 train_file_s3 = [
+    # [
+    #     feat_file,
+    #     attribute_file,
+    #     f"{anno_root}/scanqa_train_stage3.json",
+    #     1
+    # ],
     [
         feat_file,
         attribute_file,
-        f"{anno_root}/scanqa_train_stage3.json",
+        f"{anno_root}/scanrefer_train_conversation.json",
+        3
+    ],
+    [
+        feat_file,
+        attribute_file,
+        f"{anno_root}/scanrefer_train_detail.json",
         1
     ],
-    # [
-    #     feat_file,
-    #     attribute_file,
-    #     f"{anno_root}/scanrefer_train_conversation.json",
-    #     3
-    # ],
-    # [
-    #     feat_file,
-    #     attribute_file,
-    #     f"{anno_root}/scanrefer_train_detail.json",
-    #     1
-    # ],
     # [
     #     feat_file,
     #     attribute_file,
@@ -81,8 +81,13 @@ val_file_s3 = [
     [
         feat_file,
         attribute_file,
-        f"{anno_root}/scanrefer_val_stage3.json"
+        f"{anno_root}/scanrefer_val_conversation.json"
     ],
+    [
+        feat_file,
+        attribute_file,
+        f"{anno_root}/scanrefer_val_detail.json"
+    ]
 ]
 
 
