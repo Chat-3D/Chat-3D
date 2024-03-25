@@ -12,3 +12,4 @@ tqdm==4.64.1
 transformers==4.36.0
 trimesh==3.23.1
 wandb==0.14.0
+pycocoevalcap==1.2

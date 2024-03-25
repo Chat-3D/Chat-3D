@@ -8,42 +8,16 @@ train_file_s1 = [
         feat_file,
         attribute_file,
         f"{anno_root}/scanrefer_train_stage1.json",
-    ],
-    # [
-    #     feat_file,
-    #     attribute_file,
-    #     f"{anno_root}/nr3d_train_stage1.json",
-    # ],
-    # [
-    #     feat_file,
-    #     attribute_file,
-    #     f"{anno_root}/scannet_train_stage1.json",
-    # ],
-    # [
-    #     f"{anno_root}/objaverse_{pc_encoder}_feats.pt",
-    #     f"{anno_root}/objaverse_attributes.json",
-    #     f"{anno_root}/objaverse_stage1.json"
-    # ]
+    ]
 ]
 train_file_s2 = [
     [
         feat_file,
         attribute_file,
         f"{anno_root}/scanrefer_train_stage2.json",
-    ],
-    # [
-    #     feat_file,
-    #     attribute_file,
-    #     f"{anno_root}/nr3d_train_stage2.json"
-    # ]
+    ]
 ]
 train_file_s3 = [
-    # [
-    #     feat_file,
-    #     attribute_file,
-    #     f"{anno_root}/scanqa_train_stage3.json",
-    #     1
-    # ],
     [
         feat_file,
         attribute_file,
@@ -55,13 +29,7 @@ train_file_s3 = [
         attribute_file,
         f"{anno_root}/scanrefer_train_detail.json",
         1
-    ],
-    # [
-    #     feat_file,
-    #     attribute_file,
-    #     f"{anno_root}/nr3d_train_tf.json",
-    #     1
-    # ]
+    ]
 ]
 val_file_s1 = [
     [
@@ -81,12 +49,7 @@ val_file_s3 = [
     [
         feat_file,
         attribute_file,
-        f"{anno_root}/scanrefer_val_conversation.json"
-    ],
-    [
-        feat_file,
-        attribute_file,
-        f"{anno_root}/scanrefer_val_detail.json"
+        f"{anno_root}/scanrefer_val_stage3.json"
     ]
 ]
 

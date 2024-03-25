@@ -18,7 +18,7 @@ evaluate=False
 lr=5e-3
 
 
-ARGS=$(getopt -o "s:p:e:" -l "stage:,pretrained_path:,evaluate:" -- "$@")
+ARGS=$(getopt -o "s:p:e:" -l "stage:,pretrained_path:,evaluate:,lr:" -- "$@")
 eval set -- "$ARGS"
 
 while true; do
