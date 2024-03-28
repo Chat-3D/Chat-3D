@@ -14,34 +14,30 @@ MASTER_NODE='localhost'
 stage=1  # change for different stage (1, 2, 3)
 epoch=3
 pretrained_path=""
-evaluate=False
+evaluate=false
 lr=5e-3
 
-
-ARGS=$(getopt -o "s:p:e:" -l "stage:,pretrained_path:,evaluate:,lr:" -- "$@")
-eval set -- "$ARGS"
-
-while true; do
+while [ "$#" -gt 0 ]; do
     case "$1" in
-        -s | --stage)
+        --stage)
             stage="$2"
             shift 2
             ;;
-        -p | --pretrained_path)
+        --pretrained_path)
             pretrained_path="$2"
             shift 2
             ;;
-        -e | --evaluate)
-            evaluate="$2"
-            shift 2
+        --evaluate)
+            evaluate=true
+            shift
             ;;
-        -l | --lr)
+        --lr)
             lr="$2"
             shift 2
             ;;
-        --)
-            shift
-            break
+        *)
+            echo "Unknown option: $1"
+            exit 1
             ;;
     esac
 done
