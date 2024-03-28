@@ -14,7 +14,7 @@ MASTER_NODE='localhost'
 stage=1  # change for different stage (1, 2, 3)
 epoch=3
 pretrained_path=""
-evaluate=false
+evaluate=False
 lr=5e-3
 
 while [ "$#" -gt 0 ]; do
@@ -28,7 +28,7 @@ while [ "$#" -gt 0 ]; do
             shift 2
             ;;
         --evaluate)
-            evaluate=true
+            evaluate=True
             shift
             ;;
         --lr)
